@@ -1,0 +1,12 @@
+{
+  "name": "async-monad",
+  "version": "1.0.0",
+  "main": "monad.js",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^3.2.0"
+  },
+  "scripts": {
+    "test": "jasmine"
+  }
+}
