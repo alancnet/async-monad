@@ -1,4 +1,8 @@
 const monad = config => (...args) => {
+    const resolve = val => (val && val.then)
+        ? val
+        : {then: fn => resolve(fn(val)), __stepStub: true, __stepValue: val}
+
     const withState = state => {
         const step = {}
         let then = null
@@ -12,7 +16,7 @@ const monad = config => (...args) => {
                 return withState(
                     state.then(
                         oldState =>
-                            monad.Promise.resolve(fn(oldState, ...args))
+                            resolve(fn(oldState, ...args))
                             .then(newState => newState === undefined ? state : newState)
                     )
                 )
@@ -34,13 +38,14 @@ const monad = config => (...args) => {
             })
         }
 
-        step.then = (resolved, rejected, final) => state.then(finalState => monad.Promise.resolve(then ? then(finalState) : finalState)).then(resolved, rejected, final)
+        step.then = (resolved, rejected, final) => state.then(finalState => resolve(then ? then(finalState) : finalState)).then(resolved, rejected, final)
         step.catch = (rejected, final) => step.then(null, rejected, final)
         step.finally = (final) => step.then(null, null, final)
+        step.valueOf = () => state.__stepStub ? state.__stepValue : monad.Promise.resolve(state)
         return step
     }
 
-    return withState(monad.Promise.resolve(
+    return withState(resolve(
        config.init
        ? config.init(...args)
        : args.length === 1

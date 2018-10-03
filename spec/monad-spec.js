@@ -108,14 +108,14 @@ describe('Flags', () => {
 })
 
 describe('Simple Monad', () => {
-    it('should work', async () => {
+    it('should work', () => {
         const myMonad = monad({
             square: x => x * x,
             cube: x => x * x * x,
             negate: x => -x,
         })
 
-        const val = await myMonad(2).square().cube().negate()
+        const val = myMonad(2).square().cube().negate().valueOf()
         expect(val).toEqual(-64)
     })
     it('should work async', async () => {

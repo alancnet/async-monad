@@ -1,6 +1,6 @@
 {
   "name": "async-monad",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "monad.js",
   "license": "MIT",
   "devDependencies": {
